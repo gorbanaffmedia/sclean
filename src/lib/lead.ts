@@ -28,4 +28,8 @@ export async function submitLead(payload: LeadPayload): Promise<LeadResult> {
   }
 }
 
-export const isContactValid = (value: string) => value.replace(/\s/g, '').length >= 5
+/** Valid only when the full Russian number is entered: 10 digits after the country code. */
+export const isContactValid = (value: string) => {
+  const digits = value.replace(/\D/g, '')
+  return (/^[78]/.test(digits) ? digits.slice(1) : digits).length === 10
+}

@@ -37,8 +37,8 @@ ASSETS = {
 
 def main() -> None:
     OUT.mkdir(parents=True, exist_ok=True)
-    for old in OUT.glob("*.webp"):
-        old.unlink()
+    # client photos (scripts/prepare-client-photos.py) live in the same folder —
+    # only this script's own slugs are overwritten, nothing is wiped
     total = 0
     for slug, (name, widths) in ASSETS.items():
         src = Image.open(DONOR / name).convert("RGB")

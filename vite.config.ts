@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => {
   const siteUrl = (env.VITE_SITE_URL ?? '').replace(/\/+$/, '')
 
   return {
+    base: '/new-site/',
     plugins: [
       react(),
       {

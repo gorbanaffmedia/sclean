@@ -430,7 +430,7 @@ section[id],
 /* --------------------------------------------------------------- 01 hero */
 .hero {
   background: var(--lime);
-  padding: 65px 0 0;
+  padding: 24px 0 0;
 }
 .hero__grid {
   display: grid;
@@ -440,7 +440,7 @@ section[id],
 }
 .hero__copy {
   display: grid;
-  gap: 28px;
+  gap: 22px;
   justify-items: start;
 }
 .hero__copy h1 {
@@ -464,6 +464,7 @@ section[id],
 }
 .hero__media {
   aspect-ratio: 0.8333;
+  max-height: calc(100svh - var(--header-h) - 48px);
   border-radius: var(--r-card);
   overflow: hidden;
 }

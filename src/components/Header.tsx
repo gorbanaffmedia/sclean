@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { HEADER_CTA, NAV } from '../data/content'
-import { SITE } from '../config'
 import { ButtonLink } from './Button'
 import { Phone } from './Phone'
 
@@ -51,8 +50,8 @@ export function Header() {
   return (
     <header className="header">
       <div className="container header__row">
-        <a href="#top" className="brand" aria-label={`${SITE.brand} — наверх`}>
-          {SITE.brand}
+        <a href="#top" className="brand" aria-label="S-CLEAN ОМСК — наверх">
+          S-CLEAN ОМСК
         </a>
         <nav className="nav" aria-label="Основная навигация">
           {NAV.map((n) => (

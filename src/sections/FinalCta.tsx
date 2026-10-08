@@ -3,6 +3,7 @@ import { FINAL } from '../data/content'
 import { FINAL_CHOICES, serviceLabel } from '../data/services'
 import { useBooking } from '../booking'
 import { isContactValid, submitLead } from '../lib/lead'
+import { maskPhoneInput } from '../lib/phoneMask'
 import { Button } from '../components/Button'
 import { LeadStatus, type FormStatus } from '../components/LeadStatus'
 import { Reveal } from '../components/Reveal'
@@ -55,14 +56,14 @@ export function FinalCta() {
             <input
               id="final-contact"
               className="field field--dark"
-              type="text"
+              type="tel"
               autoComplete="tel"
               placeholder={FINAL.placeholder}
               value={contact}
               aria-invalid={status === 'invalid'}
               aria-describedby="final-status"
               onChange={(e) => {
-                setContact(e.target.value)
+                setContact(maskPhoneInput(e.target.value))
                 if (status === 'invalid') setStatus(null)
               }}
             />

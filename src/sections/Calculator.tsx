@@ -3,6 +3,7 @@ import { CALC } from '../data/content'
 import { AREA_OPTIONS, SERVICES, WHEN_OPTIONS, serviceLabel } from '../data/services'
 import { useBooking } from '../booking'
 import { isContactValid, submitLead } from '../lib/lead'
+import { maskPhoneInput } from '../lib/phoneMask'
 import { Button } from '../components/Button'
 import { LeadStatus, type FormStatus } from '../components/LeadStatus'
 import { Reveal } from '../components/Reveal'
@@ -121,14 +122,14 @@ export function Calculator() {
                 <input
                   id="calc-contact"
                   className="field field--dark"
-                  type="text"
+                  type="tel"
                   autoComplete="tel"
                   placeholder={CALC.placeholder}
                   value={contact}
                   aria-invalid={status === 'invalid'}
                   aria-describedby="calc-status"
                   onChange={(e) => {
-                    setContact(e.target.value)
+                    setContact(maskPhoneInput(e.target.value))
                     if (status === 'invalid') setStatus(null)
                   }}
                 />
