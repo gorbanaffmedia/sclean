@@ -19,7 +19,7 @@ const PORTRAIT = 1122 / 1402
 
 export const IMG = {
   // client photos (images/ → scripts/prepare-client-photos.py)
-  hero: d('hero-steam-window', [640, 768], 1145 / 1374),
+  hero: d('hero-steam-window', [640, 768], 768 / 922),
   productChandelier: d('product-chandelier', [480, 768], 4 / 3),
   productRenovationTeam: d('product-renovation-team', [480, 900], 4 / 3),
   productEntrance: d('product-entrance', [480, 768], 4 / 3),
@@ -47,4 +47,16 @@ export const IMG = {
   team2: d('team-2', [400, 700], 1),
   team3: d('team-3', [400, 700], 1),
   team4: d('team-4', [400, 700], 1),
+  // client case photos, one key per slot (not cropped; ratio = source size)
+  caseRepairBefore: d('case-repair-before', [480, 900], 1086 / 1448),
+  caseRepairAfter: d('case-repair-after', [480, 900], 1086 / 1448),
+  caseGeneralBefore: d('case-general-before', [480, 900], 1085 / 1448),
+  caseGeneralAfter: d('case-general-after', [480, 900], 1085 / 1448),
+  caseRentBefore: d('case-rent-before', [480, 900], 1086 / 1448),
+  caseRentAfter: d('case-rent-after', [480, 900], 1086 / 1448),
+  // client team portraits, square crop around the face
+  teamAnna: d('team-anna', [400, 700], 1),
+  teamMaria: d('team-maria', [400, 700], 1),
+  teamEkaterina: d('team-ekaterina', [400, 700], 1),
+  teamAlexey: d('team-alexey', [400, 700], 1),
 } satisfies Record<string, Img>

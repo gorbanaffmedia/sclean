@@ -5,3 +5,9 @@ dist
 .env.*.local
 dist-ssr
 .env.production
+
+# local image processing
+tools/
+from-gpt/
+to-gpt/
+backup-img-before-gpt/

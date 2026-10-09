@@ -241,10 +241,10 @@ export const APPROACH = typoDeep({
 export const TEAM = typoDeep({
   title: 'Вы понимаете, кого впускаете в квартиру',
   people: [
-    { name: 'Анна', role: 'Клинер • опыт 4 года', img: IMG.team1 },
-    { name: 'Мария', role: 'Клинер • опыт 6 лет', img: IMG.team2 },
-    { name: 'Екатерина', role: 'Бригадир • опыт 8 лет', img: IMG.team3 },
-    { name: 'Алексей', role: 'Менеджер • опыт 5 лет', img: IMG.team4 },
+    { name: 'Анна', role: 'Клинер • опыт 4 года', img: IMG.teamAnna },
+    { name: 'Мария', role: 'Клинер • опыт 6 лет', img: IMG.teamMaria },
+    { name: 'Екатерина', role: 'Бригадир • опыт 8 лет', img: IMG.teamEkaterina },
+    { name: 'Алексей', role: 'Менеджер • опыт 5 лет', img: IMG.teamAlexey },
   ],
 })
 
@@ -255,8 +255,8 @@ export const CASES = typoDeep({
     {
       title: '64 м² после ремонта',
       text: 'Семья переезжает через два дня. Строительная пыль, плитка, двери и окна.',
-      before: IMG.vacuumWindowCase,
-      after: IMG.roomYellowChairCase,
+      before: IMG.caseRepairBefore,
+      after: IMG.caseRepairAfter,
       stats: [
         ['Команда', '3 чел.'],
         ['Время', '6 ч.'],
@@ -266,8 +266,8 @@ export const CASES = typoDeep({
     {
       title: 'Генеральная 3-комнатной',
       text: 'Кухня, ванная, двери, плинтусы и накопившаяся бытовая грязь.',
-      before: IMG.kitchenWipeCase,
-      after: IMG.kitchenCounterCase,
+      before: IMG.caseGeneralBefore,
+      after: IMG.caseGeneralAfter,
       stats: [
         ['Площадь', '78 м²'],
         ['Время', '5 ч.'],
@@ -277,8 +277,8 @@ export const CASES = typoDeep({
     {
       title: 'После арендаторов',
       text: 'Вернули объект в аккуратное состояние перед следующей сдачей.',
-      before: IMG.vacuumSofaCase,
-      after: IMG.livingNeutral,
+      before: IMG.caseRentBefore,
+      after: IMG.caseRentAfter,
       stats: [
         ['Площадь', '45 м²'],
         ['Время', '4 ч.'],
