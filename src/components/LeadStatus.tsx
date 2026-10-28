@@ -7,14 +7,12 @@ export type FormStatus = LeadResult | 'sending' | 'invalid' | null
 /** Honest submission feedback: success is shown only when the endpoint confirmed it. */
 export function LeadStatus({ id, status }: { id: string; status: FormStatus }) {
   let text: ReactNode = null
-  if (status === 'invalid') text = 'Укажите телефон или мессенджер.'
+  if (status === 'invalid') text = 'Укажите номер телефона полностью.'
   if (status === 'sent') text = 'Заявка отправлена. Свяжемся с вами, чтобы уточнить детали.'
   if (status === 'error' || status === 'not-configured')
     text = (
       <>
-        {status === 'error'
-          ? 'Не удалось отправить заявку. Попробуйте ещё раз.'
-          : 'Онлайн-заявки пока не подключены — заявка не отправлена.'}
+        Не удалось отправить заявку. Попробуйте ещё раз.
         {SITE.phoneHref && (
           <>
             {' '}

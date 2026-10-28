@@ -14,7 +14,7 @@ export function Team() {
               <div className="person__media">
                 <Picture
                   img={p.img}
-                  alt={`${p.name}, портрет`}
+                  alt={p.name === 'Алексей' ? 'Алексей выполняет химчистку мебели экстрактором' : `${p.name}, портрет`}
                   sizes="(min-width: 1200px) 282px, (min-width: 810px) 413px, calc(100vw - 36px)"
                 />
               </div>

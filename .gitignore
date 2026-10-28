@@ -11,3 +11,7 @@ tools/
 from-gpt/
 to-gpt/
 backup-img-before-gpt/
+
+# production snapshot (reference only) and archives
+prod-reference/
+*.tgz

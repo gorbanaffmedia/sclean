@@ -3,6 +3,7 @@
  * ASSET_REQUIREMENTS.md). Alt texts describe the content only.
  */
 export interface Img {
+  src?: string
   base: string
   widths: [number, number]
   /** intrinsic ratio w/h of the source, for width/height attributes */
@@ -24,7 +25,7 @@ export const IMG = {
   productRenovationTeam: d('product-renovation-team', [480, 900], 4 / 3),
   productEntrance: d('product-entrance', [480, 768], 4 / 3),
   productMattressSteam: d('product-mattress-steam', [480, 900], 4 / 3),
-  productCleanRoom: d('product-clean-room', [480, 900], 4 / 3),
+  productAirconCleaning: d('product-aircon-cleaning', [480, 900], 4 / 3),
   productWindowsDuo: d('product-windows-duo', [480, 768], 4 / 3),
   productDirtyWindow: d('product-dirty-window', [480, 900], 4 / 3),
   productMirrorWipe: d('product-mirror-wipe', [480, 900], 4 / 3),
@@ -58,5 +59,5 @@ export const IMG = {
   teamAnna: d('team-anna', [400, 700], 1),
   teamMaria: d('team-maria', [400, 700], 1),
   teamEkaterina: d('team-ekaterina', [400, 700], 1),
-  teamAlexey: d('team-alexey', [400, 700], 1),
+  teamAlexey: { ...d('team-alexey', [400, 700], 3 / 4), src: `${import.meta.env.BASE_URL}assets/img/alexey-real.webp` },
 } satisfies Record<string, Img>

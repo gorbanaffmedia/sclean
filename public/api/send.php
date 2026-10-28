@@ -9,7 +9,10 @@ const MAIL_FROM = 'no-reply@go-sclean.ru';
 const MAIL_SUBJECT = 'Новая заявка с сайта go-sclean.ru';
 const ALLOWED_ORIGINS = ['https://go-sclean.ru', 'https://www.go-sclean.ru'];
 
+// Keep mail/runtime warnings out of the JSON response; server logging is retained.
+ini_set('display_errors', '0');
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
 
 $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
 if (in_array($origin, ALLOWED_ORIGINS, true)) {
@@ -32,19 +35,48 @@ if ($method !== 'POST') {
     respond(405, ['ok' => false]);
 }
 
-$data = json_decode(file_get_contents('php://input') ?: '', true);
-if (!is_array($data)) {
-    $data = [];
+$raw = file_get_contents('php://input', false, null, 0, 16385);
+if ($raw === false || strlen($raw) > 16384) {
+    respond(400, ['ok' => false]);
+}
+$data = json_decode($raw, true);
+if (!is_array($data) || json_last_error() !== JSON_ERROR_NONE) {
+    respond(400, ['ok' => false]);
 }
 
 $contact = field($data, 'contact');
-if ($contact === '') {
+if (!is_string($data['contact'] ?? null) || !valid_phone($data['contact']) || ($data['consent'] ?? false) !== true) {
     respond(400, ['ok' => false]);
 }
+
+$services = [
+    'Генеральная уборка', 'Уборка после ремонта', 'Мойка окон', 'Химчистка мягкой мебели',
+    'Поддерживающая уборка', 'Чистка кондиционеров', 'Чистка кондиционера', 'Уборка после ЧП', 'Уборка коммерческих объектов',
+    'Не знаю', 'не выбрано', 'Генеральная', 'После ремонта', 'Перед заселением', 'После арендаторов',
+    'Химчистка мебели', 'Уборка после ЧП (смерть, потоп)',
+];
+if (!in_array(field($data, 'source'), ['calculator', 'final-cta'], true)
+    || !in_array(field($data, 'service'), $services, true)) {
+    respond(400, ['ok' => false]);
+}
+
+$additional = $data['additionalServices'] ?? [];
+if (!is_array($additional) || count($additional) > 3) {
+    respond(400, ['ok' => false]);
+}
+foreach ($additional as $value) {
+    if (!is_string($value) || !in_array($value, ['Мойка окон', 'Химчистка мягкой мебели', 'Чистка кондиционеров'], true)
+        || $value === field($data, 'service')) respond(400, ['ok' => false]);
+}
+if (count(array_unique($additional)) !== count($additional)) respond(400, ['ok' => false]);
+$data['additionalServices'] = implode(', ', $additional);
+$data['consent'] = 'Да — расчёт стоимости и связь по заявке';
 
 $labels = [
     'source'  => 'Форма',
     'service' => 'Услуга',
+    'additionalServices' => 'Дополнительные услуги',
+    'consent' => 'Согласие на обработку данных',
     'product' => 'Карточка',
     'area'    => 'Площадь',
     'when'    => 'Когда',
@@ -75,7 +107,12 @@ $headers = implode("\r\n", [
 
 $subject = '=?UTF-8?B?' . base64_encode(MAIL_SUBJECT) . '?=';
 
-$sent = mail(MAIL_TO, $subject, $body, $headers, '-f' . MAIL_FROM);
+try {
+    $sent = @mail(MAIL_TO, $subject, $body, $headers, '-f' . MAIL_FROM);
+} catch (Throwable $error) {
+    error_log('S-CLEAN: mail transport failed');
+    $sent = false;
+}
 
 respond($sent ? 200 : 500, ['ok' => $sent]);
 
@@ -87,7 +124,27 @@ function field(array $data, string $key): string
         return '';
     }
     $value = preg_replace('/[\r\n\t]+/u', ' ', (string) $value);
-    return mb_substr(trim($value), 0, 500);
+    // UTF-8 truncation without requiring the optional mbstring extension.
+    if ($value === null || !preg_match('/^.{0,500}/us', trim($value), $matches)) return '';
+    return $matches[0];
+}
+
+/**
+ * Matches the client validator (src/lib/lead.ts): exactly 10 digits after the country code.
+ * "+…" must be "+7"; without "+", a leading 7/8 counts as the country code only in an 11-digit number.
+ */
+function valid_phone(string $value): bool
+{
+    $trimmed = trim($value);
+    if (strlen($value) > 64 || !preg_match('/^\+?[\d\s()-]+$/D', $trimmed)) return false;
+    $national = preg_replace('/\D/', '', $trimmed);
+    if ($trimmed[0] === '+') {
+        if (($national[0] ?? '') !== '7') return false;
+        $national = substr($national, 1);
+    } elseif (preg_match('/^[78]\d{10}$/D', $national)) {
+        $national = substr($national, 1);
+    }
+    return preg_match('/^\d{10}$/D', $national) === 1;
 }
 
 function respond(int $code, array $payload): void

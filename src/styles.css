@@ -807,6 +807,19 @@ section[id],
 .scope-panel__cta {
   margin-top: auto;
 }
+/* footnote under a checklist: «*» sits in the check-mark column */
+.scope-panel__note {
+  position: relative;
+  margin-top: -8px;
+  padding-left: 26px;
+  line-height: 1.5;
+  color: var(--navy);
+}
+.scope-panel__note-mark {
+  position: absolute;
+  left: 3px;
+  top: 0;
+}
 .scope-extra {
   display: flex;
   flex-wrap: wrap;
@@ -1093,6 +1106,39 @@ section[id],
   color: var(--navy);
   font: 500 18px/1.5 var(--display);
   letter-spacing: -0.01em;
+}
+.review__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+  color: var(--navy);
+  font-size: 15px;
+}
+.review__stars {
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+.review blockquote .review__text--clamped {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 6;
+  line-clamp: 6;
+  overflow: hidden;
+}
+.review__more {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--navy);
+  font: 600 16px/1.4 var(--display);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.review__more:hover {
+  text-decoration-thickness: 2px;
 }
 .trust-strip {
   display: grid;
@@ -1587,3 +1633,20 @@ section[id],
     transform: none;
   }
 }
+
+/* Required contact and consent elements; original section/card grids are unchanged. */
+.header__phones { display: flex; flex-direction: column; gap: 4px; }
+.consent { display: grid; grid-template-columns: 24px 1fr; gap: 8px; font-size: 14px; line-height: 1.5; }
+.consent input { width: 20px; height: 20px; margin-top: 3px; }
+.consent a { grid-column: 2; color: inherit; text-decoration: underline; }
+.footer__legal { margin-top: 16px; overflow-wrap: anywhere; }
+.footer__legal p { margin: 4px 0; }
+.legal-page { max-width: 900px; padding-block: 40px; overflow-wrap: anywhere; }
+.legal-page h1 { font-size: clamp(28px, 4vw, 44px); line-height: 1.15; margin: 28px 0 16px; }
+.legal-page h2 { font-size: 24px; margin: 28px 0 12px; }
+.legal-page p, .legal-page ul { margin: 12px 0; }
+.legal-page ul { padding-left: 24px; }
+.legal-page li { margin: 6px 0; }
+.legal-page a:not(.brand), .footer__legal a { text-decoration: underline; }
+.review-links { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 20px; }
+@media (max-width: 809px) { .header__phones { display: none; } }

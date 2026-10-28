@@ -3,10 +3,12 @@ import { CALC } from '../data/content'
 import { AREA_OPTIONS, SERVICES, WHEN_OPTIONS, serviceLabel } from '../data/services'
 import { useBooking } from '../booking'
 import { isContactValid, submitLead } from '../lib/lead'
+import { reachGoal } from '../lib/metrika'
 import { maskPhoneInput } from '../lib/phoneMask'
 import { Button } from '../components/Button'
 import { LeadStatus, type FormStatus } from '../components/LeadStatus'
 import { Reveal } from '../components/Reveal'
+import { Consent } from '../components/Consent'
 
 const TOTAL = 4
 
@@ -21,6 +23,7 @@ export function Calculator() {
   const { answers, step, setStep, setAnswer } = useBooking()
   const [contact, setContact] = useState('')
   const [status, setStatus] = useState<FormStatus>(null)
+  const [consent, setConsent] = useState(false)
   const questionRef = useRef<HTMLHeadingElement>(null)
   const moved = useRef(false)
 
@@ -51,6 +54,7 @@ export function Calculator() {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!consent || status === 'sending') return
     if (!isContactValid(contact)) {
       setStatus('invalid')
       return
@@ -58,12 +62,15 @@ export function Calculator() {
     setStatus('sending')
     const result = await submitLead({
       source: 'calculator',
-      service: answers.service ? serviceLabel(answers.service) : 'не выбрано',
+      service: answers.service ? serviceLabel(answers.service) : answers.product ?? 'не выбрано',
       product: answers.product,
       area: answers.area ?? undefined,
       when: answers.when ?? undefined,
       contact: contact.trim(),
+      consent: true,
     })
+    // the only Metrika goal: a lead the server confirmed
+    if (result === 'sent') reachGoal('new_site_lead', { form: 'calculator' })
     setStatus(result)
   }
 
@@ -118,11 +125,12 @@ export function Calculator() {
                 ))}
               </div>
             ) : (
-              <form className="calc__form" onSubmit={onSubmit} noValidate>
+              <form className="calc__form" onSubmit={onSubmit}>
                 <input
                   id="calc-contact"
                   className="field field--dark"
                   type="tel"
+                  required
                   autoComplete="tel"
                   placeholder={CALC.placeholder}
                   value={contact}
@@ -133,7 +141,8 @@ export function Calculator() {
                     if (status === 'invalid') setStatus(null)
                   }}
                 />
-                <Button type="submit" variant="lime" block disabled={status === 'sending'}>
+                <Consent id="calc-consent" checked={consent} onChange={setConsent} />
+                <Button type="submit" variant="lime" block disabled={status === 'sending' || !consent}>
                   {status === 'sending' ? 'Отправляем…' : CALC.submit}
                 </Button>
                 <LeadStatus id="calc-status" status={status} />

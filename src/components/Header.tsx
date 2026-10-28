@@ -1,3 +1,4 @@
+import { SITE } from '../config'
 import { useEffect, useRef, useState } from 'react'
 import { HEADER_CTA, NAV } from '../data/content'
 import { ButtonLink } from './Button'
@@ -50,8 +51,8 @@ export function Header() {
   return (
     <header className="header">
       <div className="container header__row">
-        <a href="#top" className="brand" aria-label="S-CLEAN ОМСК — наверх">
-          S-CLEAN ОМСК
+        <a href="#top" className="brand" aria-label={`${SITE.brand} — наверх`}>
+          {SITE.brand}
         </a>
         <nav className="nav" aria-label="Основная навигация">
           {NAV.map((n) => (
@@ -61,7 +62,7 @@ export function Header() {
           ))}
         </nav>
         <div className="header__right">
-          <Phone className="header__phone" />
+          <div className="header__phones"><Phone className="header__phone" /><a className="header__phone header__phone--secondary" href={SITE.mobileHref}>{SITE.mobileDisplay}</a></div>
           <ButtonLink href="#calc" className="header__cta">
             {HEADER_CTA}
           </ButtonLink>
@@ -89,6 +90,7 @@ export function Header() {
             </a>
           ))}
           <Phone className="drawer__phone" />
+          <a className="drawer__phone" href={SITE.mobileHref}>{SITE.mobileDisplay}</a>
           <ButtonLink href="#calc" block onClick={close}>
             {HEADER_CTA}
           </ButtonLink>

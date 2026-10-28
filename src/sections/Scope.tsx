@@ -80,6 +80,11 @@ export function Scope() {
                   </p>
                 )}
                 <CheckList items={t.items} />
+                {t.note && (
+                  <p className="scope-panel__note">
+                    <span className="scope-panel__note-mark" aria-hidden="true">*</span> {t.note}
+                  </p>
+                )}
                 {t.result && (
                   <p>
                     <b>Результат:</b> {t.result}

@@ -3,34 +3,40 @@ import { FINAL } from '../data/content'
 import { FINAL_CHOICES, serviceLabel } from '../data/services'
 import { useBooking } from '../booking'
 import { isContactValid, submitLead } from '../lib/lead'
+import { reachGoal } from '../lib/metrika'
 import { maskPhoneInput } from '../lib/phoneMask'
 import { Button } from '../components/Button'
 import { LeadStatus, type FormStatus } from '../components/LeadStatus'
 import { Reveal } from '../components/Reveal'
+import { Consent } from '../components/Consent'
 
 export function FinalCta() {
   const { answers } = useBooking()
   const [choice, setChoice] = useState<string | null>(null)
   const [contact, setContact] = useState('')
   const [status, setStatus] = useState<FormStatus>(null)
+  const [consent, setConsent] = useState(false)
   // Follows the calculator's service until the visitor picks a chip here.
   const selected = choice ?? (answers.service ? serviceLabel(answers.service) : null)
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault()
+    if (!consent || status === 'sending') return
     if (!isContactValid(contact)) {
       setStatus('invalid')
       return
     }
     setStatus('sending')
-    setStatus(
-      await submitLead({
-        source: 'final-cta',
-        service: selected ?? 'не выбрано',
-        product: answers.product,
-        contact: contact.trim(),
-      }),
-    )
+    const result = await submitLead({
+      source: 'final-cta',
+      service: selected ?? answers.product ?? 'не выбрано',
+      product: choice === null ? answers.product : undefined,
+      contact: contact.trim(),
+      consent: true,
+    })
+    // the only Metrika goal: a lead the server confirmed
+    if (result === 'sent') reachGoal('new_site_lead', { form: 'final' })
+    setStatus(result)
   }
 
   return (
@@ -41,7 +47,7 @@ export function FinalCta() {
           <p className="lead">{FINAL.lead}</p>
         </Reveal>
         <Reveal className="final__panel" index={1}>
-          <form className="final__form" onSubmit={onSubmit} noValidate aria-labelledby="final-form-title">
+          <form className="final__form" onSubmit={onSubmit} aria-labelledby="final-form-title">
             <h3 id="final-form-title">{FINAL.formTitle}</h3>
             <div className="chips" role="group" aria-labelledby="final-form-title">
               {FINAL_CHOICES.map((c) => (
@@ -57,6 +63,7 @@ export function FinalCta() {
               id="final-contact"
               className="field field--dark"
               type="tel"
+              required
               autoComplete="tel"
               placeholder={FINAL.placeholder}
               value={contact}
@@ -67,7 +74,8 @@ export function FinalCta() {
                 if (status === 'invalid') setStatus(null)
               }}
             />
-            <Button type="submit" variant="lime" block disabled={status === 'sending'}>
+            <Consent id="final-consent" checked={consent} onChange={setConsent} />
+            <Button type="submit" variant="lime" block disabled={status === 'sending' || !consent}>
               {status === 'sending' ? 'Отправляем…' : FINAL.cta}
             </Button>
             <LeadStatus id="final-status" status={status} />

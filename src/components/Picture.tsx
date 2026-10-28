@@ -15,8 +15,8 @@ export function Picture({ img, alt, sizes, eager, className }: Props) {
   return (
     <img
       className={className}
-      src={`${img.base}-${large}.webp`}
-      srcSet={`${img.base}-${small}.webp ${small}w, ${img.base}-${large}.webp ${large}w`}
+      src={img.src ?? `${img.base}-${large}.webp`}
+      srcSet={img.src ? undefined : `${img.base}-${small}.webp ${small}w, ${img.base}-${large}.webp ${large}w`}
       sizes={sizes}
       width={large}
       height={Math.round(large / img.ratio)}

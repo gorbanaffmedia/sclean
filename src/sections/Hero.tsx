@@ -40,7 +40,7 @@ export function Hero() {
         {HERO.proofs.map((p) => (
           <li key={p.value}>
             <strong>{p.value}</strong>
-            <span>{p.label}</span>
+            {p.label && <span>{p.label}</span>}
           </li>
         ))}
       </ul>
